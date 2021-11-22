@@ -1,0 +1,14 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.kmsbin.notification_launcher">
+  <application>
+  
+    <receiver android:name=".MyBroadcastReceiver"  android:exported="true">
+      <intent-filter>
+          <action android:name="android.intent.action.BOOT_COMPLETED"/>
+          <action android:name="android.intent.action.INPUT_METHOD_CHANGED" />
+      </intent-filter>
+    </receiver>
+
+  </application>
+
+</manifest>
