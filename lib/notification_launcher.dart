@@ -1,26 +1,34 @@
-
 import 'dart:async';
-
+import 'dart:collection';
 import 'package:flutter/services.dart';
+import 'package:notification_launcher/notification_message.dart';
+
+import 'notification_response.dart';
+
+export 'notification_action.dart';
+export 'notification_launcher.dart';
+export 'notification_message.dart';
+
+typedef RemoteResponseListener = void Function(RemoteResponse);
 
 class NotificationLauncher {
   static const MethodChannel platform = const MethodChannel('notification_launcher');
 
-  static Future<String?> get platformVersion async {
-    final String? version = await platform.invokeMethod('launchNotification');
-    platform.setMethodCallHandler(nativeMethodCallHandler);
-    return version;
+
+  static void setMessageListener(RemoteResponseListener rmListener) {
+    platform.setMethodCallHandler((MethodCall methodCall) async {
+      try {
+        LinkedHashMap<Object?, Object?> args = methodCall.arguments;
+        rmListener(RemoteResponse.fromJson(args.cast()));
+        print("asgffs");
+      } catch (e) {
+        print("Deu Ruim $e");
+      } finally {
+      }
+    });
   }
 
-  static Future<dynamic> nativeMethodCallHandler(MethodCall methodCall) async {
-    print('Native call!');
-    switch (methodCall.method) {
-      case "yep" :
-        print("MESSAGE FROM BROADCAST ${methodCall.method}");
-        print("Arguments ${methodCall.arguments}");    
-        return "This data from flutter.....";
-      default:
-        return "Nothing";
-    }
+  static Future<void> sendMessage(NotificationMessage notificationMessage) async {
+    await platform.invokeMethod('launchNotification', notificationMessage.toJson());
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -14,34 +16,31 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
   @override
-  void initState() {
+  initState() {
     super.initState();
-    initPlatformState();
+    NotificationLauncher.setMessageListener((rmMessage) {
+      print("ID: ${rmMessage.id}");
+      print("CHOISE: ${rmMessage.choise}");
+    });
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
+  Future<void> sendMessage() async {
     try {
-      platformVersion =
-          await NotificationLauncher.platformVersion ?? 'Unknown platform version';
+      NotificationLauncher.sendMessage(NotificationMessage(
+        body: 'random body', 
+        id: Random().nextInt(1000), 
+        title: 'random title',
+        actions: [
+          NotificationAction(actionMsg: 'Sim', actionValue: 'y'),
+          NotificationAction(actionMsg: 'Não', actionValue: 'n'),
+          NotificationAction(actionMsg: 'mAY', actionValue: 'm'),
+          NotificationAction(actionMsg: 'nunca', actionValue: 'k'),
+          NotificationAction(actionMsg: 'sempre', actionValue: 's'),
+        ]
+      ));
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
 
   @override
@@ -53,9 +52,7 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Center(
           child: ElevatedButton(
-            onPressed: (){
-              initPlatformState();
-            }, 
+            onPressed: sendMessage, 
             child: Text('Send notification')
           ),
         ),
