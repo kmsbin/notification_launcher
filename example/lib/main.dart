@@ -23,6 +23,7 @@ class _MyAppState extends State<MyApp> {
       print("ID: ${rmMessage.id}");
       print("CHOISE: ${rmMessage.choise}");
     });
+    sendMessage();
   }
 
   Future<void> sendMessage() async {
