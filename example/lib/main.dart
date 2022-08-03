@@ -23,23 +23,22 @@ class _MyAppState extends State<MyApp> {
       print("ID: ${rmMessage.id}");
       print("CHOISE: ${rmMessage.choise}");
     });
-    sendMessage();
   }
 
   Future<void> sendMessage() async {
     try {
-      NotificationLauncher.sendMessage(NotificationMessage(
-        body: 'random body', 
-        id: Random().nextInt(1000), 
-        title: 'random title',
-        actions: [
-          NotificationAction(actionMsg: 'Sim', actionValue: 'y'),
-          NotificationAction(actionMsg: 'Não', actionValue: 'n'),
-          NotificationAction(actionMsg: 'mAY', actionValue: 'm'),
-          NotificationAction(actionMsg: 'nunca', actionValue: 'k'),
-          NotificationAction(actionMsg: 'sempre', actionValue: 's'),
-        ]
-      ));
+      NotificationLauncher.sendMessage(
+        NotificationMessage(
+          body: 'scheduled notification body', 
+          id: Random().nextInt(1000), 
+          title: 'notification',
+          scheduledDate: DateTime.now().add(Duration(minutes: 3)),
+          actions: [
+            NotificationAction(actionMsg: 'Sim', actionValue: 'y'),
+            NotificationAction(actionMsg: 'Não', actionValue: 'n'),
+          ]
+        )
+      );
     } on PlatformException {
     }
   }

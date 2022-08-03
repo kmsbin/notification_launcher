@@ -14,15 +14,14 @@ typedef RemoteResponseListener = void Function(RemoteResponse);
 class NotificationLauncher {
   static const MethodChannel platform = const MethodChannel('notification_launcher');
 
-
   static void setMessageListener(RemoteResponseListener rmListener) {
     platform.setMethodCallHandler((MethodCall methodCall) async {
       try {
         LinkedHashMap<Object?, Object?> args = methodCall.arguments;
         rmListener(RemoteResponse.fromJson(args.cast()));
         print("asgffs");
-      } catch (e) {
-        print("Deu Ruim $e");
+      } catch (e, s) {
+        print("Deu Ruim $e, $s");
       } finally {
       }
     });
